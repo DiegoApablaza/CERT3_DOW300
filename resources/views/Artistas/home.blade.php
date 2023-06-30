@@ -7,29 +7,7 @@
                 <div class="card">
                     <div class="card-header">Iniciar sesiónlakalkslaksla</div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
-
-                            <div class="form-group">
-                                <label for="email">Correo electrónico</label>
-                                <input id="email" type="email" class="form-control" name="email" required autofocus>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password">Contraseña</label>
-                                <input id="password" type="password" class="form-control" name="password" required>
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="mt-3 text-center">
-                        <p>Selecciona un tipo de usuario:</p>
-                        <a href="{{ route('login') }}" class="btn btn-secondary">Usuario A</a>
-                        <a href="{{ route('login') }}" class="btn btn-secondary">Usuario B</a>
-                        <a href="{{ route('login') }}" class="btn btn-secondary">Usuario C</a>
+                        Artis
                     </div>
                 </div>
             </div>

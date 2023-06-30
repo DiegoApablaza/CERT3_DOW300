@@ -16,11 +16,16 @@
                                 </ul>
                             </div>
                         @endif
+                        @if (session()->has('success'))
+                            <div class="alert alert-success">
+                                {{ session()->get('success') }}
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('public.login') }}">
                             @csrf
 
                             <div class="form-group">
-                                <label for="email">Usuario</label>
+                                <label>Usuario</label>
                                 <input id="user" type="user" class="form-control" name="user" required autofocus>
                             </div>
 
@@ -31,6 +36,33 @@
 
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                            </div>
+                        </form>
+                        <form method="POST" action="{{ route('public.userStore') }}">
+                            @csrf
+
+                            <div class="form-group">
+                                <label>Usuario</label>
+                                <input id="user" type="user" class="form-control" name="user" required autofocus>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Contraseña</label>
+                                <input id="password" type="password" class="form-control" name="password" required>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="nombre">Nombre</label>
+                                <input id="nombre" type="text" class="form-control" name="nombre" required>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="apellido">Apellido</label>
+                                <input id="apellido" type="text" class="form-control" name="apellido" required>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" id="perfil_id" type="number" name="perfil_id" value="2" required>Crear Cuenta</button>
                             </div>
                         </form>
                     </div>

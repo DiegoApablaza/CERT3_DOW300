@@ -16,12 +16,21 @@ use App\Http\Controllers\Admin_Controller;
 |
 */
 
-Route::get('/login', [home_Controller::class, 'inicio'])->name('login');
+
+
+Route::get('/public/logout',[Public_Controller::class, 'logout'] )->name('public.cerrarSesion');
+Route::post('/public/AñadirCuenta', [Public_controller::class, 'userStore'])->name('public.userStore');
+
 Route::get('/artistaHome', [artista_controller::class, 'inicio'])->name('artista.Home');
+
 Route::get('/loginPublicHome', [Public_controller::class, 'dashboard'])->name('public.home');
 Route::post('/loginPublicLogin', [Public_controller::class, 'login'])->name('public.login');
+
 Route::get('/adminHome',[Admin_controller::class,'adminHome'])->name('admin.home');
-Route::post('/adminHomeUser', [Admin_controller::class, 'userStore'])->name('admin.userStore');
+Route::post('/admin/añadirCuenta', [Admin_controller::class, 'userStore'])->name('admin.userStore');
+Route::delete('/admin/deleteCuenta/{id}', [Admin_controller::class, 'deleteCuenta'])->name('admin.deleteCuenta');
+Route::get('/admin/editarCuenta/{user}', [Admin_controller::class, 'editCuenta'])->name('admin.editCuenta');
+Route::put('/admin/Updatecuenta/{user}', [Admin_controller::class, 'updateCuenta'])->name('admin.updateCuenta');
 
 
 Route::get('/', function () {

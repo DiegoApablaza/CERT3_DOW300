@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">Iniciar sesiónSOYADMIN</div>
+                    <div class="card-header">ADMINISTRADOR<a href="{{ route('public.cerrarSesion') }}" class="text-decoration-underline">Cerrar sesión</a></div>
                     <div class="card-body">
                         ERES ADMIN
                     </div>
@@ -55,7 +55,8 @@
                                             <th>User</th>
                                             <th>Nombre</th>
                                             <th>Apellido</th>
-                                            <th>Password</th>   
+                                            <th>Perfil</th>
+                                            <th>Acciones</th>   
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -64,7 +65,23 @@
                                                 <td>{{ $cuenta->user }}</td>
                                                 <td>{{ $cuenta->nombre }}</td>
                                                 <td>{{ $cuenta->apellido }}</td>
-                                                <td>{{ $cuenta->password }}</td>
+                                                <td>{{ $cuenta->perfil_id }}</td>
+                                                <td>
+                                                    <form method="POST" action="{{ route('admin.deleteCuenta', $cuenta->user) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                    <form method="GET" action="{{ route('admin.editCuenta', $cuenta->user) }}">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="bi bi-pencil"></i> <!-- Icono de lápiz u otro icono de edición -->
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                                
                                             </tr>
                                         @endforeach
                                     </tbody>
