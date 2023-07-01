@@ -42,6 +42,13 @@ class public_controller extends Controller
     public function userStore(Request $request)
     {
         
+        $request->validate([
+            'user'=> 'required',
+            'password'=> 'required',
+            'nombre'=> 'required',
+            'apellido'=> 'required',
+            'perfil_id'=> 'required'
+        ]);
         $hashedPassword = Hash::make($request->password);
 
 

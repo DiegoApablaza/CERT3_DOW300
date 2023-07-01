@@ -28,6 +28,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cuenats');
+        Schema::table('cuentas', function (Blueprint $table) {
+            // Eliminar la restricción de clave foránea
+            $table->dropForeign(['perfil_id']);
+        });
     }
 };

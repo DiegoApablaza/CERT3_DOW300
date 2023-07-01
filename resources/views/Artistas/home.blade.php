@@ -8,14 +8,14 @@
                 <div class="card">
                     <div class="card-header">ARTISTA<a href="{{ route('public.cerrarSesion') }}" class="text-decoration-underline">Cerrar sesión</a></div>
                     <div class="card-body">
-                        Artis
+                        Artista: {{$cuenta->user}}
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tabla2-tab" data-bs-toggle="tab" data-bs-target="#tabla2" type="button" role="tab" aria-controls="tabla2" aria-selected="false">Nueva Imagen</button>
+                                <button class="nav-link active" id="tabla2-tab" data-bs-toggle="tab" data-bs-target="#tabla1" type="button" role="tab" aria-controls="tabla1" aria-selected="true">Nueva Imagen</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="tabla3-tab" data-bs-toggle="tab" data-bs-target="#tabla3" type="button" role="tab" aria-controls="tabla3" aria-selected="false">Imagenes Baneadas</button>
@@ -26,7 +26,7 @@
 
                     <div class="card-body">
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade" id="tabla2" role="tabpanel" aria-labelledby="tabla2-tab">
+                            <div class="tab-pane fade show active" id="tabla1" role="tabpanel" aria-labelledby="tabla1-tab">
                                 <form method="POST" action="{{ route('artista.subirImagen') }}" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group">

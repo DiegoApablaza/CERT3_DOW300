@@ -5,9 +5,10 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">Iniciar sesiónSOYADMIN</div>
+                    <div class="card-header">Editando Usuario  <a href="{{ route('admin.volver',['administrador' => $administrador]) }}" class="text-decoration-underline">Cancelar</a></div>
                     <div class="card-body">
-                        ERES ADMIN
+                        Admin: {{ $administrador->user }}.
+                        Editando a {{ $cuenta->user }}
                     </div>
                     
                 </div>
@@ -20,30 +21,32 @@
                             @csrf
                             @method('PUT')
                             <div class="form-group">
-                                <label>Usuario</label>
-                                <input type="text" id="user" class="form-control" name="user" required>
-                            </div>
-                        
-                            <div class="form-group">
                                 <label for="password">Contraseña</label>
                                 <input id="password" type="password" class="form-control" name="password" required>
                             </div>
                         
                             <div class="form-group">
                                 <label for="nombre">Nombre</label>
-                                <input id="nombre" type="text" class="form-control" name="nombre" required>
+                                <input id="nombre" type="text" class="form-control" name="nombre" value="{{ $cuenta->nombre }}"required>
                             </div>
                         
                             <div class="form-group">
                                 <label for="apellido">Apellido</label>
-                                <input id="apellido" type="text" class="form-control" name="apellido" required>
+                                <input id="apellido" type="text" class="form-control" name="apellido" value="{{ $cuenta->apellido }}" required>
                             </div>
                         
                             <div class="form-group">
-                                <label>ID de Perfil</label>
-                                <input id="perfil_id" type="number" class="form-control" name="perfil_id" required>
+                                <label for="perfil_id">Perfil</label>
+                                <div>
+                                    <input id="perfil_admin" type="radio" name="perfil_id" value="1" required>
+                                    <label for="perfil_admin">Administrador</label>
+                                </div>
+                                <div>
+                                    <input id="perfil_artista" type="radio" name="perfil_id" value="2" required>
+                                    <label for="perfil_artista">Artista</label>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-info">Guardar</button>
+                            <button type="submit" class="btn btn-info mt-4">Guardar</button>
                         </form>
                     </div>
                 </div>

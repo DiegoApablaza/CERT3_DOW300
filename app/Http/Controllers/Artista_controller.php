@@ -13,6 +13,11 @@ class Artista_controller extends Controller
 {
     public function inicio(Request $request)
     {
+
+        $request->validate([
+                'user'=> 'required',
+                'password'=> 'required'
+            ]);
         $user = $request->user;
         $password = $request->password;
 

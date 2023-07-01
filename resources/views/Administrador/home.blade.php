@@ -3,11 +3,25 @@
 <body>
    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="card">
                     <div class="card-header">ADMINISTRADOR<a href="{{ route('public.cerrarSesion') }}" class="text-decoration-underline">Cerrar sesión</a></div>
                     <div class="card-body">
-                        ERES ADMIN {{$cuenta->nombre}}
+                        ADMIN USER:  {{$cuenta->user}}
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                         @endif
+                        @if (session()->has('success'))
+                            <div class="alert alert-success">
+                                {{ session()->get('success') }}
+                            </div>
+                        @endif
                     </div>
                     
                 </div>
@@ -60,22 +74,34 @@
                                          @foreach($cuentas as $cuenta)
                                             <tr>
                                                 <td>{{ $cuenta->user }}</td>
-                                                <td>{{ $cuenta->nombre }}</td>
-                                                <td>{{ $cuenta->apellido }}</td>
+                                                <td>
+                                                    {{ $cuenta->nombre }}
+                                                    @if ($cuenta->perfil_id == 2)
+                                                    <form action="{{route('admin.editarNombre',$cuenta->user)}}" method="POST">
+                                                        @csrf
+                                                        <input type="text" name="nombreNuevo" placeholder="{{$cuenta->nombre}}">
+                                                        <button class="btn btn-info mt-4" type="submit" onclick="return confirm('Seguro de cambiar el nombre de {{$cuenta->nombre}}')">Cambiar Nombre</button>
+                                                    </form>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $cuenta->apellido }}
+                                                    @if ($cuenta->perfil_id == 2)
+                                                    <form action="{{route('admin.editarApellido',$cuenta->user)}}" method="POST">
+                                                        @csrf
+                                                        <input type="text" name="apellidoNuevo" placeholder="{{$cuenta->apellido}}">
+                                                        <button class="btn btn-info mt-4" type="submit" onclick="return confirm('Seguro de cambiar el apellido de {{$cuenta->apellido}}')">Cambiar Apellido</button>
+                                                    </form>
+                                                    @endif
+                                                </td>
                                                 <td>{{ $cuenta->perfil_id }}</td>
                                                 @if ($cuenta->perfil_id == 2)
                                                 <td>
                                                     <form method="POST" action="{{ route('admin.deleteCuenta', $cuenta->user) }}">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">
+                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Seguro de eliminar {{$cuenta->user}}')">
                                                             <i class="bi bi-x-circle"></i>
-                                                        </button>
-                                                    </form>
-                                                    <form method="GET" action="{{ route('admin.editCuenta', $cuenta->user) }}">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-primary">
-                                                            <i class="bi bi-pencil"></i> 
                                                         </button>
                                                     </form>
                                                 </td>
@@ -91,29 +117,36 @@
                                     @csrf
                                     <div class="form-group">
                                         <label>Usuario</label>
-                                        <input type="text" id="user" class="form-control" name="user" required>
+                                        <input type="text" id="user" class="form-control" name="user">
                                     </div>
                                 
                                     <div class="form-group">
                                         <label for="password">Contraseña</label>
-                                        <input id="password" type="password" class="form-control" name="password" required>
+                                        <input id="password" type="password" class="form-control" name="password" >
                                     </div>
                                 
                                     <div class="form-group">
                                         <label for="nombre">Nombre</label>
-                                        <input id="nombre" type="text" class="form-control" name="nombre" required>
+                                        <input id="nombre" type="text" class="form-control" name="nombre" >
                                     </div>
                                 
                                     <div class="form-group">
                                         <label for="apellido">Apellido</label>
-                                        <input id="apellido" type="text" class="form-control" name="apellido" required>
+                                        <input id="apellido" type="text" class="form-control" name="apellido" >
                                     </div>
                                 
                                     <div class="form-group">
-                                        <label>ID de Perfil</label>
-                                        <input id="perfil_id" type="number" class="form-control" name="perfil_id" required>
+                                        <label for="perfil_id">Perfil</label>
+                                        <div>
+                                            <input id="perfil_admin" type="radio" name="perfil_id" value="1" >
+                                            <label for="perfil_admin">Administrador</label>
+                                        </div>
+                                        <div>
+                                            <input id="perfil_artista" type="radio" name="perfil_id" value="2">
+                                            <label for="perfil_artista">Artista</label>
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-info">Guardar</button>
+                                    <button type="submit" class="btn btn-info mt-4">Guardar</button>
                                 </form>
                             </div>
                         </div>

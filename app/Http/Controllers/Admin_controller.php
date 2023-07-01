@@ -8,6 +8,7 @@ use App\Models\Artista;
 use App\Models\Administrador;
 use App\Models\Cuenta;
 use App\Models\Imagen;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,6 +16,10 @@ class Admin_controller extends Controller
 {
     public function inicio(Request $request)
     {
+        $request->validate([
+            'user'=> 'required',
+            'password'=> 'required'
+        ]);
         $user = $request->user;
         $password = $request->password;
 
@@ -43,6 +48,12 @@ class Admin_controller extends Controller
         return view('login');
     }
 
+    public function volver($administrador)
+    {
+        $cuenta = Cuenta::where('user', $administrador->user)->first();
+        return view('Administrador.home',compact('cuenta'));
+    }
+
     public function adminHome()
     {
         
@@ -58,6 +69,14 @@ class Admin_controller extends Controller
     public function userStore(Request $request)
     {
         
+        $request->validate([
+            'user'=> 'required',
+            'password'=> 'required',
+            'nombre'=> 'required',
+            'apellido'=> 'required',
+            'perfil_id'=> 'required'
+        ]);
+
         $hashedPassword = Hash::make($request->password);
 
         $cuenta = new Cuenta();
@@ -74,19 +93,43 @@ class Admin_controller extends Controller
 
         $cuenta->save();
 
-        return redirect()->route('admin.home')->with('success','Usuario creado exitosamente');
+        return redirect()->back()->with('success','Usuario creado exitosamente');
+    }
+
+    public function editNombre(Request $request,$user)
+    {
+        $cuenta = Cuenta::findorFail($user);
+
+        $nombreNuevo = $request->input('nombreNuevo');
+        $cuenta->nombre = $nombreNuevo;
+        $cuenta->save();
+
+        return redirect()->back()->with('success','Nombre Editado');
+    }
+
+    public function editApellido(Request $request,$user)
+    {
+        $cuenta = Cuenta::findorFail($user);
+
+        $apellidoNuevo = $request->input('apellidoNuevo');
+        $cuenta->apellido = $apellidoNuevo;
+        $cuenta->save();
+
+        return redirect()->back()->with('success','Apellido Editado');
     }
 
     public function editCuenta($user)
     {
-        $cuenta = Cuenta::find($user);
+        $cuenta = Cuenta::findorFail($user);
 
-        if (!$cuenta) {
-            abort(404); // O cualquier otra acción que desees realizar si la cuenta no existe
-        }
+        $nombreNuevo = $request->input('nombreoNuevo');
+        $cuenta->nombre = $nombreNuevo;
+        $cuenta->save();
 
-        return view('Administrador.edit', compact('cuenta'));
+        return redirect()->back()->with('success','Nombre Editado');
+        
     }
+
     public function updateCuenta(Request $request, $user)
     {
         $cuenta = Cuenta::find($user);
@@ -94,7 +137,6 @@ class Admin_controller extends Controller
 
         $hashedPassword = Hash::make($request->input('password'));
 
-        $cuenta->user = $request->input('user');
         $cuenta->password = $hashedPassword;
         $cuenta->nombre = $request->input('nombre');
         $cuenta->apellido = $request->input('apellido');
@@ -122,9 +164,26 @@ class Admin_controller extends Controller
     public function deleteCuenta($id)
     {
         $cuenta = Cuenta::find($id);
+        $tables = DB::select('SHOW TABLES');
+
+        foreach ($tables as $table) {
+            $tableName = reset($table);
+        
+            // Elimina los registros de la tabla que cumplan con la condición
+            DB::table('imagenes')->where('cuenta_user', $cuenta->user)->delete();
+        }
         
         if (!$cuenta) {
             return redirect()->back()->with('error', 'La cuenta no existe');
+        }
+
+        $relations = $cuenta->getRelations();
+    
+        // Recorrer cada relación y eliminar los registros relacionados
+        foreach ($relations as $relation) {
+            $relation->each(function ($item) {
+                $item->delete();
+            });
         }
         
         $cuenta->delete();
