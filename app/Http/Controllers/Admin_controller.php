@@ -13,18 +13,46 @@ use Illuminate\Support\Facades\Hash;
 
 class Admin_controller extends Controller
 {
-    public function inicio()
+    public function inicio(Request $request)
+    {
+        $user = $request->user;
+        $password = $request->password;
+
+        $cuenta = Cuenta::where('user',$user)->first();
+
+        if ($cuenta->perfil_id !== 1) {
+            return redirect()->back()->withErrors(['user' => 'Accesso no autorizado']);
+        }
+
+        if (!$cuenta || !Hash::check($password, $cuenta->password)) {
+            return redirect()->back()->withErrors(['user' => 'Usuario o contraseña incorrectos']);
+        }
+        $perfiles = Perfil::all();
+        $cuentas = Cuenta::all();
+        $imagenes = Imagen::all();
+
+
+
+
+
+        return view('Administrador.home', compact('perfiles', 'cuentas', 'imagenes','cuenta'));
+    }
+
+    public function index(Request $request)
     {
         return view('login');
     }
 
     public function adminHome()
     {
+        
             $perfiles = Perfil::all();
             $cuentas = Cuenta::all();
             $imagenes = Imagen::all();
+            $user = session('user');
 
-            return view('Administrador.home', compact('perfiles', 'cuentas', 'imagenes'));
+
+            return view('Administrador.home', compact('perfiles', 'cuentas', 'imagenes','user'));
     }
 
     public function userStore(Request $request)
@@ -38,6 +66,11 @@ class Admin_controller extends Controller
         $cuenta->nombre = $request->nombre;
         $cuenta->apellido = $request->apellido;
         $cuenta->perfil_id = $request->perfil_id;
+
+        if (Cuenta::where('user',$cuenta->user)->exists())
+        {
+            return redirect()->back()->with('error','el nombre de usuario ya existe');
+        }
 
         $cuenta->save();
 
@@ -58,9 +91,6 @@ class Admin_controller extends Controller
     {
         $cuenta = Cuenta::find($user);
 
-        if (!$cuenta) {
-            abort(404); // O cualquier otra acción que desees realizar si la cuenta no existe
-        }
 
         $hashedPassword = Hash::make($request->input('password'));
 
@@ -70,9 +100,22 @@ class Admin_controller extends Controller
         $cuenta->apellido = $request->input('apellido');
         $cuenta->perfil_id = $request->input('perfil_id');
 
+        if (Cuenta::where('user',$cuenta->user)->exists())
+        {
+            return redirect()->back()->with('error','el nombre de usuario ya existe');
+        }
+
         $cuenta->save();
 
         return redirect()->route('admin.home')->with('success', 'La cuenta se actualizó correctamente.');
+    }
+
+    public function banearImagen(Imagen $imagen,Request $request)
+    {
+        $imagen->baneada = !$imagen->baneada;
+        $imagen->motivo_ban = $request->input('motivo_ban');
+        $imagen->save();
+        return redirect()->back()->with('success', 'Imagen Baneada');
     }
 
 

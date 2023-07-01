@@ -25,15 +25,18 @@ class cuenta extends Authenticable
         return $this->belongsTo(perfil::class);
     }
 
+    public function imagenes()
+    {
+        return $this->hasMany('\App\Models\Imagen','cuenta_user','user');
+    }
+
     public function registraUltimoLogin():void
     {
         $this->ultimo_login = Carbon::now();
         $this->save();
     }
+    
 
-    public function cambiarEstado():void
-    {
-        $this->activo = !$this->activo;
-        $this->save();
-    }
+
+   
 }

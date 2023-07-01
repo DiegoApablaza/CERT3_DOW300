@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">ADMINISTRADOR<a href="{{ route('public.cerrarSesion') }}" class="text-decoration-underline">Cerrar sesión</a></div>
                     <div class="card-body">
-                        ERES ADMIN
+                        ERES ADMIN {{$cuenta->nombre}}
                     </div>
                     
                 </div>
@@ -19,9 +19,6 @@
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="tabla2-tab" data-bs-toggle="tab" data-bs-target="#tabla2" type="button" role="tab" aria-controls="tabla2" aria-selected="false">Cuentas</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tabla3-tab" data-bs-toggle="tab" data-bs-target="#tabla3" type="button" role="tab" aria-controls="tabla3" aria-selected="false">Imagenes</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="tabla4-tab" data-bs-toggle="tab" data-bs-target="#tabla4" type="button" role="tab" aria-controls="tabla4" aria-selected="false">Crear Cuenta</button>
@@ -66,6 +63,7 @@
                                                 <td>{{ $cuenta->nombre }}</td>
                                                 <td>{{ $cuenta->apellido }}</td>
                                                 <td>{{ $cuenta->perfil_id }}</td>
+                                                @if ($cuenta->perfil_id == 2)
                                                 <td>
                                                     <form method="POST" action="{{ route('admin.deleteCuenta', $cuenta->user) }}">
                                                         @csrf
@@ -77,37 +75,12 @@
                                                     <form method="GET" action="{{ route('admin.editCuenta', $cuenta->user) }}">
                                                         @csrf
                                                         <button type="submit" class="btn btn-primary">
-                                                            <i class="bi bi-pencil"></i> <!-- Icono de lápiz u otro icono de edición -->
+                                                            <i class="bi bi-pencil"></i> 
                                                         </button>
                                                     </form>
                                                 </td>
+                                                @endif
                                                 
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade" id="tabla3" role="tabpanel" aria-labelledby="tabla3-tab">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>id</th>
-                                            <th>titulo</th>
-                                            <th>Archivo</th>
-                                            <th>Baneada</th>
-                                            <th>motivo_ban</th>
-                                            <th>cuenta_user</th>      
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                         @foreach($imagenes as $imagen)
-                                            <tr>
-                                                <td>{{ $imagen->id }}</td>
-                                                <td>{{ $imagen->titulo }}</td>
-                                                <td>{{ $imagen->archivo }}</td>
-                                                <td>{{ $imagen->baneada }}</td>
-                                                <td>{{ $imagen->motivo_ban }}</td>
-                                                <td>{{ $imagen->cuenta_user }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -146,6 +119,41 @@
                         </div>
                         
                     </div>
+                </div>
+                
+
+                </div>
+
+            </div>
+            <div class="card" style="background: linear-gradient(to bottom, #a7b11a, #e8e693)">
+                <div class="row">
+                    @foreach($imagenes as $imagen)
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="text-center">
+                                    <img class="card-img-top w-100" src="{{Storage::url($imagen->archivo)}}" alt="{{$imagen->titulo}}">
+                                </div>
+                                <div class="card-body">
+                                    @if ($imagen->baneada)
+                                        <form action="{{route('admin.banearImagen',$imagen->id)}}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">Desbanear Imagen</button>
+                                        </form>
+                                    @else
+                                        <form action="{{route('admin.banearImagen',$imagen->id)}}" method="POST">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label for="motivo_ban" class="form-label">Motivo del Ban</label>
+                                                <input type="text" class="form-control" id="motivo_ban" name="motivo_ban">
+                                            </div>
+                                            <button type="submit" class="btn btn-danger">Banear Imagen</button>
+                                        </form>
+                                        @endif
+                                    <h5 class="card-title">{{$imagen->titulo}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

@@ -12,4 +12,9 @@ class imagen extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'integer';
     public $timestamps = false;
+
+    public function cuenta()
+    {
+        return $this->belongsTo('App\Models\Cuenta');
+    }
 }
